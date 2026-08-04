@@ -1,0 +1,186 @@
+#include <iostream>
+#include <string>
+#include <ctime>
+#include <vector>
+using namespace std;
+class TypingTest
+{
+private:
+    vector<string> easyTexts;
+    vector<string> mediumTexts;
+    vector<string> hardTexts;
+public:
+
+    TypingTest()
+    {
+        easyTexts.push_back("C plus plus is a powerful programming language.");
+        easyTexts.push_back("Typing practice improves your keyboard skills.");
+        easyTexts.push_back("Students should learn programming every day.");
+
+        mediumTexts.push_back("Programming helps students develop logical thinking and problem solving abilities.");
+        mediumTexts.push_back("Object oriented programming makes software design easier and more organized.");
+        mediumTexts.push_back("Typing speed is an important skill for programmers and writers.");
+
+        hardTexts.push_back("C plus plus supports object oriented programming concepts such as encapsulation inheritance and polymorphism.");
+        hardTexts.push_back("Software developers must write efficient and readable code to build reliable applications.");
+        hardTexts.push_back("Typing accurately and quickly requires concentration practice and proper finger placement.");
+    }
+
+    string getRandomText(int level)
+    {
+        int index;
+
+        if(level == 1)
+        {
+            index = rand() % easyTexts.size();
+            return easyTexts[index];
+        }
+
+        else if(level == 2)
+        {
+            index = rand() % mediumTexts.size();
+            return mediumTexts[index];
+        }
+
+        else
+        {
+            index = rand() % hardTexts.size();
+            return hardTexts[index];
+        }
+    }
+
+    void startTest(int level)
+    {
+        string text = getRandomText(level);
+        string userInput;
+
+        cout << "\nType the following paragraph:\n\n";
+        cout << text << endl << endl;
+
+        cout << "Press ENTER when ready...";
+        cin.ignore();
+
+        time_t start, end;
+
+        time(&start);
+
+        cout << "\nStart typing:\n";
+        getline(cin, userInput);
+
+        time(&end);
+
+        double timeTaken = difftime(end, start);
+
+        calculateResult(text, userInput, timeTaken);
+    }
+
+    void calculateResult(string original, string typed, double timeTaken)
+    {
+        int correct = 0;
+
+        int minLength = min(original.length(), typed.length());
+
+        for(int i = 0; i < minLength; i++)
+        {
+            if(original[i] == typed[i])
+            {
+                correct++;
+            }
+        }
+
+        double accuracy = ((double)correct / original.length()) * 100;
+
+        double words = original.length() / 5.0;
+
+        double speed = (words / timeTaken) * 60;
+
+        cout << "\n------ RESULT ------\n";
+
+        cout << "Time Taken: " << timeTaken << " seconds\n";
+
+        cout << "Typing Speed: " << speed << " WPM\n";
+
+        cout << "Accuracy: " << accuracy << " %\n";
+
+        int score = (speed * accuracy) / 100;
+
+        cout << "Score: " << score << endl;
+
+        if(score > 80)
+            cout << "Performance: Excellent\n";
+
+        else if(score > 60)
+            cout << "Performance: Good\n";
+
+        else if(score > 40)
+            cout << "Performance: Average\n";
+
+        else
+            cout << "Performance: Needs Improvement\n";
+    }
+};
+
+void showMenu()
+{
+    cout << "\n====== Typing Speed Test System ======\n";
+    cout << "1. Easy Level\n";
+    cout << "2. Medium Level\n";
+    cout << "3. Hard Level\n";
+    cout << "4. Exit\n";
+    cout << "Choose level: ";
+}
+
+int main()
+{
+    srand(time(0));
+
+    TypingTest test;
+
+    int choice;
+
+    do
+    {
+        showMenu();
+
+        cin >> choice;
+
+        switch(choice)
+        {
+            case 1:
+                cout << "\nEasy Level Selected\n";
+                test.startTest(1);
+                break;
+
+            case 2:
+                cout << "\nMedium Level Selected\n";
+                test.startTest(2);
+                break;
+
+            case 3:
+                cout << "\nHard Level Selected\n";
+                test.startTest(3);
+                break;
+
+            case 4:
+                cout << "Exiting program...\n";
+                break;
+
+            default:
+                cout << "Invalid choice.\n";
+        }
+
+        if(choice != 4)
+        {
+            char again;
+
+            cout << "\nDo you want to try again? (y/n): ";
+            cin >> again;
+
+            if(again == 'n' || again == 'N')
+                break;
+        }
+
+    } while(choice != 4);
+    cout << "\nThank you for using the Typing Speed Test Program.\n";
+    return 0;
+}
